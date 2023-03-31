@@ -323,6 +323,20 @@ public class Model {
      * @param guess the full guess
      */
     public void enterNewGuess(String guess) {
+        if(this.gameState == GameState.ONGOING ){
+            if(guess.length() != WORD_SIZE){
+                this.gameState = GameState.ILLEGAL_WORD;
+                notifyObservers(STATE_MSGS.get(GameState.ILLEGAL_WORD));
+                this.gameState = GameState.ONGOING;
+            } else {
+                for(int i = 0; i < guess.length(); i++){
+                    this.guessLetters[this.attemptNum][i].setChar(guess.charAt(i));
+                    this.lettersUsed.add(guess.charAt(i));
+                }
+                this.charPos = guess.length();
+                this.confirmGuess();
+            }
+        }
         /*
          * TODO
          * Check the game's state (this.gameState).

@@ -101,6 +101,9 @@ public class Turdle extends ConsoleApplication
         super.setOnCommand( "cheat", 0, ": Show the secret word",
                             args -> this.cheat()
         );
+        super.setOnCommand("new", 0, ": Start a new game",
+                args -> this.newGame()
+        );
         // TODO Add code here to cause the "new" command to start a new game.
     }
 

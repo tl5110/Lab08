@@ -13,6 +13,7 @@ import java.util.*;
  *
  * @see ConsoleApplication
  * @author RIT CS
+ * @author Tiffany Lee
  */
 public class Turdle extends ConsoleApplication
         implements Observer< Model, String > {

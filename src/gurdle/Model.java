@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * The model for the wordle game
  *
  * @author RIT CS
+ * @author Tiffany Lee
  */
 public class Model {
 

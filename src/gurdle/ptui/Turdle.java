@@ -105,7 +105,6 @@ public class Turdle extends ConsoleApplication
         super.setOnCommand("new", 0, ": Start a new game",
                 args -> this.newGame()
         );
-        // TODO Add code here to cause the "new" command to start a new game.
     }
 
 

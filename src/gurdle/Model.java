@@ -338,27 +338,6 @@ public class Model {
                 this.confirmGuess();
             }
         }
-        /*
-         * TODO
-         * Check the game's state (this.gameState).
-         * If the game state is ongoing (not won/lost) [see GameState Enum above],
-         *   if the length of the guess is not the expected word size [see WORD_SIDE constant variable above],
-         *     Set the game's state to ILLEGAL_WORD.
-         *     Notify the observers of this object passing the message "Illegal word.". To pass that message,
-         *      use the STATES_MSGS EnumMap (e.g. STATES_MSGS.get(GameState.ILLEGAL_WORD))
-         *     Set the game state back to ONGOING.:
-         *   else,
-         *     Using this.attemptNum as the row number, make a loop to copy
-         *       each character of the guess into the CharChoice instance at
-         *       the appropriate spot in the guess matrix this.guessLetters.
-         *       (Do not mess with the CharChoice status here.)
-         *       Add each character to the List this.lettersUsed
-         *           (useful to the GUI).
-         *     Update the this.charPost variable
-         *     this.charPos = guess.length(); // => a word has been entered.
-         *     Check whether the guess word is the secret word
-         *     this.confirmGuess(); // <-- checks the guess
-         */
     }
 
     // ******** Queries, for View ********

@@ -90,7 +90,7 @@ public class Gurdle extends Application
      * @return HBox containing the information mentioned above
      */
     public HBox makeTop(){
-        HBox top = new HBox();
+        HBox top = new HBox(50);
         // GUESSES
         guessNum.setText("#guesses: " + model.numAttempts());
         guessNum.setStyle( "-fx-font: 18px Menlo" );
@@ -100,8 +100,7 @@ public class Gurdle extends Application
         // SECRET
         secret.setStyle( "-fx-font: 18px Menlo" );
         top.getChildren().addAll(guessNum, message, secret);
-        top.setSpacing(50);
-        top.setAlignment(Pos.TOP_CENTER);
+        top.setAlignment(Pos.CENTER);
         return top;
     }
 
@@ -112,6 +111,7 @@ public class Gurdle extends Application
      */
     public BorderPane makeBottom(){
         BorderPane keypadButtons = new BorderPane();
+        HBox gameCheat = new HBox(20);
         // KEYPAD
         GridPane keypad = new GridPane();
         int row = 0;
@@ -144,10 +144,8 @@ public class Gurdle extends Application
         // ENTER
         Button enter = new Button("Enter");
         enter.setStyle( "-fx-font: 18px Menlo" );
-        keypadButtons.setRight(enter);
+        enter.setAlignment(Pos.CENTER_RIGHT);
         enter.setOnAction(event -> model.confirmGuess());
-        // Two bottom buttons
-        HBox gameCheat = new HBox(20);
         // NEW GAME
         Button newGame = new Button("New Game");
         newGame.setStyle( "-fx-font: 18px Menlo" );
@@ -165,8 +163,9 @@ public class Gurdle extends Application
 
         gameCheat.getChildren().add(newGame);
         gameCheat.getChildren().add(cheat);
-        gameCheat.setAlignment(Pos.BOTTOM_CENTER);
+        gameCheat.setAlignment(Pos.CENTER);
 
+        keypadButtons.setRight(enter);
         keypadButtons.setBottom(gameCheat);
         keypadButtons.setCenter(keypad);
         return keypadButtons;
@@ -184,7 +183,8 @@ public class Gurdle extends Application
                 this.charGuess[r][c] = new Label();
                 this.charGuess[r][c].setBackground(WHITE);
                 this.charGuess[r][c].setStyle("""
-                            -fx-padding: 25;
+                            -fx-font: 20px Menlo;
+                            -fx-padding: 20;
                             -fx-border-style: solid inside;
                             -fx-border-width: 2;
                             -fx-border-insets: 10;
@@ -194,8 +194,6 @@ public class Gurdle extends Application
                 gridGuesses.add(this.charGuess[r][c], c, r);
             }
         }
-        gridGuesses.setHgap(5);
-        gridGuesses.setVgap(5);
         gridGuesses.setAlignment(Pos.CENTER);
         return gridGuesses;
     }
@@ -238,18 +236,17 @@ public class Gurdle extends Application
                 }
 
                 for(Button letter : alphabetList){
-                    if(model.gameState().equals(Model.GameState.ILLEGAL_WORD)){
-                        if(!model.usedLetter(letter.getText().charAt(0))){
-                            letter.setBackground(WHITE);
-                        }
+                    if(model.gameState().equals(Model.GameState.ILLEGAL_WORD)
+                            && !model.usedLetter(letter.getText().charAt(0))){
+                        letter.setBackground(WHITE);
                     } else if(model.usedLetter(cc.getChar()) && letter.getText().equals(ch)){
                         if (ccStatus.equals(CharChoice.Status.WRONG)) {
                             letter.setBackground(GRAY);
-                        } else if (ccStatus.equals(CharChoice.Status.WRONG_POS)) {
+                        } else if(ccStatus.equals(CharChoice.Status.WRONG_POS)) {
                             letter.setBackground(ORANGE);
-                        } else if (ccStatus.equals(CharChoice.Status.RIGHT_POS)) {
+                        } else if(ccStatus.equals(CharChoice.Status.RIGHT_POS)) {
                             letter.setBackground(GREEN);
-                        } else if (ccStatus.equals(CharChoice.Status.EMPTY) &&
+                        } else if(ccStatus.equals(CharChoice.Status.EMPTY) &&
                                 (letter.getBackground() == WHITE)) {
                             letter.setBackground(GRAY);
                         }

@@ -24,6 +24,8 @@ public class Gurdle extends Application
         implements Observer< Model, String > {
     /** View/Controller access to model */
     private Model model;
+    /** Initializes an empty GUI */
+    private final BorderPane gurdle = new BorderPane();
     /** Grid of guesses' letters */
     private Label[][] charGuess;
     /** List of all the letter keys/buttons */
@@ -42,6 +44,7 @@ public class Gurdle extends Application
     private static final Background GREEN = new Background(new BackgroundFill(Color.GREEN, null, null));
     /** Background color white */
     private static final Background WHITE = new Background(new BackgroundFill(Color.WHITE, null, null));
+
 
     /**
      * Create the Wordle/Gurdle model and register this object as an observer
@@ -68,8 +71,6 @@ public class Gurdle extends Application
      */
     @Override
     public void start( Stage mainStage ) {
-        BorderPane gurdle = new BorderPane();
-
         gurdle.setTop(this.makeTop());
         gurdle.setBottom(this.makeBottom());
         gurdle.setCenter(this.makeCenter());
@@ -153,6 +154,9 @@ public class Gurdle extends Application
         newGame.setOnAction(event -> {
             model.newGame();
             secret.setText("");
+            gurdle.setTop(this.makeTop());
+            gurdle.setBottom(this.makeBottom());
+            gurdle.setCenter(this.makeCenter());
         });
         // CHEAT
         Button cheat = new Button("Cheat");
@@ -190,6 +194,8 @@ public class Gurdle extends Application
                 gridGuesses.add(this.charGuess[r][c], c, r);
             }
         }
+        gridGuesses.setHgap(5);
+        gridGuesses.setVgap(5);
         gridGuesses.setAlignment(Pos.CENTER);
         return gridGuesses;
     }
@@ -206,8 +212,15 @@ public class Gurdle extends Application
      */
     @Override
     public void update(Model model, String message) {
+        if(model.gameState().equals(Model.GameState.WON)){
+            this.message.setText("You won!");
+        } else if(model.gameState().equals(Model.GameState.LOST)){
+            this.message.setText("You lost!");
+            this.secret.setText("secret: " + model.secret());
+        }
         for (int r = 0; r < 6; r++) {
             for (int c = 0; c < 5; c++) {
+                this.message.setText(message);
                 guessNum.setText("#guesses: " + model.numAttempts());
                 CharChoice cc = model.get(r, c);
                 final String ch = String.valueOf(cc.getChar());
@@ -225,26 +238,24 @@ public class Gurdle extends Application
                 }
 
                 for(Button letter : alphabetList){
-                    if(letter.getText().equals(charGuess[r][c].getText())){
-//                    if(model.usedLetter(letter.getText().charAt(0))){
-                        if(ccStatus.equals(CharChoice.Status.WRONG)) {
+                    if(model.gameState().equals(Model.GameState.ILLEGAL_WORD)){
+                        if(!model.usedLetter(letter.getText().charAt(0))){
+                            letter.setBackground(WHITE);
+                        }
+                    } else if(model.usedLetter(cc.getChar()) && letter.getText().equals(ch)){
+                        if (ccStatus.equals(CharChoice.Status.WRONG)) {
                             letter.setBackground(GRAY);
-                        } else if(ccStatus.equals(CharChoice.Status.WRONG_POS)){
+                        } else if (ccStatus.equals(CharChoice.Status.WRONG_POS)) {
                             letter.setBackground(ORANGE);
-                        } else if(ccStatus.equals(CharChoice.Status.RIGHT_POS)){
+                        } else if (ccStatus.equals(CharChoice.Status.RIGHT_POS)) {
                             letter.setBackground(GREEN);
-                        } else if(ccStatus.equals(CharChoice.Status.EMPTY)){
+                        } else if (ccStatus.equals(CharChoice.Status.EMPTY) &&
+                                (letter.getBackground() == WHITE)) {
                             letter.setBackground(GRAY);
                         }
                     }
                 }
             }
-        }
-        if(model.gameState().equals(Model.GameState.WON)){
-            this.message.setText("You won!");
-        } else if(model.gameState().equals(Model.GameState.LOST)){
-            this.message.setText("You lost!");
-            this.secret.setText("secret: " + model.secret());
         }
     }
 
